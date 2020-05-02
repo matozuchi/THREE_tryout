@@ -42,11 +42,19 @@ for(let i = 1; i < cubeAmount; i++){
 
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.update();
+let targetPosition;
 
 var animate = function () {
     socket.on('otherPosition', (position) => {
-        otherCube.position.x = position;
+        targetPosition = position
     })
+
+    if(otherCube.position.x < targetPosition){
+        otherCube.position.x += .1
+    } else if (otherCube.position.x > targetPosition) {
+        otherCube.position.x += -.1
+    }
+
     requestAnimationFrame( animate );
     for(let i = 1; i < cubeAmount; i++){
         cubio[i].rotation.x += i*.0001;
