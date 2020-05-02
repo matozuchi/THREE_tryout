@@ -14,7 +14,8 @@ let material = new THREE.MeshBasicMaterial( {
 } );
 
 var cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
+var otherCube = new THREE.Mesh( geometry, material );
+scene.add( cube, otherCube );
 
 // camera.position.z = 5;
 camera.position.y = 10;
@@ -43,6 +44,9 @@ const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.update();
 
 var animate = function () {
+    socket.on('otherPosition', (position) => {
+        otherCube.position.x = position;
+    })
     requestAnimationFrame( animate );
     for(let i = 1; i < cubeAmount; i++){
         cubio[i].rotation.x += i*.0001;
@@ -54,7 +58,8 @@ var animate = function () {
         cube.position.z += -.1
     }
     if(right == true) {
-        cube.position.x += .1
+        cube.position.x += .1;
+        socket.emit('position', cube.position.x);
     }
     if(left == true) {
         cube.position.x += -.1
